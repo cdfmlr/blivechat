@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "blivechat"
+version = "1.6.1"
+description = "用于OBS的仿YouTube风格的bilibili直播评论栏"
+authors = ["John Smith <xfgryujk@126.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+aiohttp = "3.7.4"
+brotli = "1.0.9"
+pycryptodome = "3.10.1"
+sqlalchemy = "1.4.31"
+tornado = "6.1.0"
+
+
+[[tool.poetry.source]]
+name = "qinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
+secondary = false
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
