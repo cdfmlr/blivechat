@@ -3,12 +3,12 @@
 #
 
 FROM node:16.14.0-bullseye AS builder
-ARG BASE_PATH='/root/blivechat'
+ENV BASE_PATH='/root/blivechat'
 WORKDIR "${BASE_PATH}/frontend"
 
 # 前端依赖
 COPY frontend/package.json ./
-RUN npm i --registry=https://registry.npmmirror.com
+RUN npm i --registry=https://registry.npm.taobao.org
 
 # 编译前端
 COPY frontend ./
@@ -18,9 +18,9 @@ RUN npm run build
 # 准备后端
 #
 
-FROM python:3.8.12-bullseye
-ARG BASE_PATH='/root/blivechat'
-ARG EXT_DATA_PATH='/mnt/data'
+FROM python:3.8.16-slim-bullseye
+ENV BASE_PATH='/root/blivechat'
+ENV EXT_DATA_PATH='/mnt/data'
 WORKDIR "${BASE_PATH}"
 
 # 后端依赖
