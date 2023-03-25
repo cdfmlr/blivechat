@@ -199,9 +199,10 @@ class ChatHandler(tornado.websocket.WebSocketHandler):  # noqa
 
     # 跨域测试用
     def check_origin(self, origin):
-        if self.application.settings['debug']:
-            return True
-        return super().check_origin(origin)
+        return True
+        # if self.application.settings['debug']:
+        #     return True
+        # return super().check_origin(origin)
 
     @property
     def has_joined_room(self):
