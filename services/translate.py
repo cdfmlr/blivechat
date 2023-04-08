@@ -192,8 +192,8 @@ class FlowControlTranslateProvider(TranslateProvider):
                 asyncio.ensure_future(self._translate_coroutine(text, future))
                 # 频率限制
                 await asyncio.sleep(self._query_interval)
-            except Exception:  # noqa
-                logger.exception('FlowControlTranslateProvider error:')
+            except Exception as e:  # noqa
+                logger.warning(f'FlowControlTranslateProvider error: {e}')
 
     async def _translate_coroutine(self, text, future):
         try:
@@ -244,21 +244,22 @@ class TencentTranslateFree(FlowControlTranslateProvider):
                     self._server_time_delta = int((datetime.datetime.now().timestamp() - server_time) * 1000)
                 except (KeyError, ValueError):
                     self._server_time_delta = 0
-        except (aiohttp.ClientConnectionError, asyncio.TimeoutError):
-            logger.exception('TencentTranslateFree init error:')
+        except (aiohttp.ClientConnectionError, asyncio.TimeoutError) as e:
+            # logger.debug('TencentTranslateFree init error:')  # 没必要 print_traceback 
+            logger.warning(f'TencentTranslateFree init error: {e}')  # 其实甚至没必要输出，咱不用这个翻译功能
             return False
 
         # 获取token URL
         m = re.search(r"""\breauthuri\s*=\s*['"](.+?)['"]""", html)
         if m is None:
-            logger.exception('TencentTranslateFree init failed: reauthuri not found')
+            logger.warning('TencentTranslateFree init failed: reauthuri not found')
             return False
         reauthuri = m[1]
 
         # 获取验证用的key、iv
         m = re.search(r"""\s*=\s*['"]((?:\w+\|\w+-)+\w+\|\w+)['"]""", html)
         if m is None:
-            logger.exception('TencentTranslateFree init failed: initial global variables not found')
+            logger.warning('TencentTranslateFree init failed: initial global variables not found')
             return False
         uc_key = None
         uc_iv = None
@@ -279,8 +280,8 @@ class TencentTranslateFree(FlowControlTranslateProvider):
                                    reauthuri, r.status, r.reason)
                     return False
                 data = await r.json()
-        except (aiohttp.ClientConnectionError, asyncio.TimeoutError):
-            logger.exception('TencentTranslateFree init error:')
+        except (aiohttp.ClientConnectionError, asyncio.TimeoutError) as e:
+            logger.warning(f'TencentTranslateFree init error: {e}')
             return False
 
         qtv = data.get('qtv', None)
@@ -301,8 +302,8 @@ class TencentTranslateFree(FlowControlTranslateProvider):
     async def _reinit_coroutine(self):
         try:
             while True:
-                await asyncio.sleep(30)
-                logger.debug('TencentTranslateFree reinit')
+                await asyncio.sleep(60*60*24)
+                logger.warning('TencentTranslateFree reinit')
                 asyncio.ensure_future(self._do_init())
         except asyncio.CancelledError:
             pass
