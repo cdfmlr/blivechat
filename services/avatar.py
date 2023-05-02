@@ -140,7 +140,8 @@ async def _get_avatar_url_from_web_coroutine(user_id, future):
     try:
         avatar_url = await _do_get_avatar_url_from_web(user_id)
     except BaseException as e:
-        future.set_exception(e)
+        # logger.error('Failed to fetch avatar: %s uid=%d', e, user_id)
+        future.set_result(None)
     else:
         future.set_result(avatar_url)
 
@@ -170,7 +171,8 @@ async def _do_get_avatar_url_from_web(user_id):
                     _last_fetch_banned_time = datetime.datetime.now()
                 return None
             data = await r.json()
-    except (aiohttp.ClientConnectionError, asyncio.TimeoutError):
+    except Exception as e:
+        # logger.warning('Failed to fetch avatar: %s uid=%d', e, user_id)
         return None
 
     if data['code'] != 0:
