@@ -342,6 +342,13 @@ class RoomInfoHandler(api.base.ApiHandler):  # noqa
 
 class AvatarHandler(api.base.ApiHandler):  # noqa
     async def get(self):
+        # deprecated avatar feature for muvtuber
+        avatar_url = services.avatar.DEFAULT_AVATAR_URL
+        self.set_header('Cache-Control', 'private, max-age=86400')
+        self.write({'avatarUrl': avatar_url})
+        return
+        
+        # the original avatar logic
         uid = int(self.get_query_argument('uid'))
         avatar_url = await services.avatar.get_avatar_url_or_none(uid)
         if avatar_url is None:
