@@ -1,5 +1,13 @@
 # blivechat
-用于OBS的仿YouTube风格的bilibili直播评论栏
+
+> 🔑 This is a muli component. You can find the main repository [here](https://github.com/cdfmlr/muvtuber).
+
+用于OBS的仿YouTube风格的bilibili直播评论栏。
+
+> About this fork:
+> 
+> 这个 fork 针对 blivechat 在 muli 项目中的应用，对原项目进行了一些修改，牺牲部分功能（如翻译、头像），以提了高鲁棒性。
+> Goto the [main repository](https://github.com/cdfmlr/muvtuber) for more information.
 
 ![OBS截图](./screenshots/obs.png)  
 ![Chrome截图](./screenshots/chrome.png)  
